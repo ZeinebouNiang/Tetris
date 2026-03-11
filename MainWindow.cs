@@ -32,18 +32,18 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         // Défini la taille de la fenêtre à partir des constantes
-        Width = 300;
-        Height = 600;
+        Width = 368;
+        Height = 514;
         // Définit le texte de InfoText
         InfoText.Text = "Zone de texte";
         // Défini la taille du canvas à partir des constantes
-        TetrisCanvas.Width = 200;
-        TetrisCanvas.Height = 400;
+        TetrisCanvas.Width = 288;
+        TetrisCanvas.Height = 354;
         // Défini la taille des boutons à partir des constantes
-        StartButton.Width = 200;
-        StartButton.Height = 30;
-        QuitButton.Width = 200;
-        QuitButton.Height = 30; 
+        StartButton.Width = 288;
+        StartButton.Height = 40;
+        QuitButton.Width = 288;
+        QuitButton.Height = 40; 
         // Initialise le minuteur pour faire descendre le tetrino courant toutes les 500 milisecondes
         Minuteur = new DispatcherTimer();
         Minuteur.Interval = TimeSpan.FromMilliseconds(500);
