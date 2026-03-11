@@ -117,8 +117,16 @@ public partial class MainWindow : Window
     }  
     public void DessinerCarre(int x, int y, TetrinoCouleur Noir)
     {
+    //conversion coordonnées jeu en pixels
     int pixelX = x * 22 +12;
     int pixelY = x * 22 + 12;
+    
+    //Dessiner le carré coloré
+    DessinerRectangle(pixelX, pixelY, 22, 22, Noir);
+    
+     //Dessiner le contour noir par-dessus 
+    DessinerRectangle(pixelX, pixelY, 22, 22, TetrinoCouleur.Noir //juste le contour
+    );
     }
     
 
