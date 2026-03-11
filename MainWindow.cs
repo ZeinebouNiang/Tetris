@@ -115,6 +115,10 @@ public partial class MainWindow : Window
         ConvertirCouleur(TetrinoCouleur.Blanc)
     );
     }  
+    public void DessinerCarre(int x, int y, TetrinoCouleur Noir)
+    {
+    
+    }
     
 
     //* Ajout Iteration 1*/
