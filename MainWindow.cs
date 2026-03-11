@@ -117,7 +117,8 @@ public partial class MainWindow : Window
     }  
     public void DessinerCarre(int x, int y, TetrinoCouleur Noir)
     {
-    
+    int pixelX = x * 22 +12;
+    int pixelY = x * 22 + 12;
     }
     
 
