@@ -114,8 +114,7 @@ public partial class MainWindow : Window
         JeuTetris.HauteurGrille * TailleCarre,
         ConvertirCouleur(TetrinoCouleur.Blanc)
     );
-    }  
-    
+    }
 
     //* Ajout Iteration 1*/
 
