@@ -83,7 +83,7 @@ public partial class MainWindow : Window
 
     /* Dessine un rectangle dans le TetrisCanvas, à la position (x, y), de largeur width, 
     de hauteur height (en pixels) et de couleur couleur. */
-    public void DessinerRectangle(int x, int y, int with, int height, Avalonia.Media.IBrush couleur)
+    public void DessinerCarre(int x, int y, int with, int height, Avalonia.Media.IBrush couleur)
     {
         TetrisCanvas.Children.Add(new Avalonia.Controls.Shapes.Rectangle
         {
@@ -104,31 +104,31 @@ public partial class MainWindow : Window
       int hauteur = JeuTetris.HauteurGrille * TailleCarre + 2 * EpaisseurCadre;
 
       // cadre autour rectangle noir 
-      DessinerRectangle(0, 0, largeur, hauteur, ConvertirCouleur(TetrinoCouleur.Noir));
+      DessinerCarre(0, 0, largeur, hauteur, ConvertirCouleur(TetrinoCouleur.Noir));
 
       // rectangle blanc intérieur
-      DessinerRectangle(
+      DessinerCarre(
         EpaisseurCadre,
         EpaisseurCadre,
         JeuTetris.LargeurGrille * TailleCarre,
         JeuTetris.HauteurGrille * TailleCarre,
         ConvertirCouleur(TetrinoCouleur.Blanc)
     );
-    }  
-    public void DessinerCarre(int x, int y, TetrinoCouleur Noir)
+    }
+
+    public void DessinerContour(int x, int y, TetrinoCouleur Noir)
     {
     //conversion coordonnées jeu en pixels
     int pixelX = x * 22 +12;
     int pixelY = x * 22 + 12;
     
     //Dessiner le carré coloré
-    DessinerRectangle(pixelX, pixelY, 22, 22, Noir);
+    DessinerCarre(pixelX, pixelY, 22, 22, (ConvertirCouleur(TetrinoCouleur.Noir)));
     
      //Dessiner le contour noir par-dessus 
-    DessinerRectangle(pixelX, pixelY, 22, 22, TetrinoCouleur.Noir //juste le contour
-    );
+    DessinerCarre(pixelX, pixelY, 22, 22,ConvertirCouleur(TetrinoCouleur.Noir)) //juste le contour
+    ;
     }
-    
 
     //* Ajout Iteration 1*/
 
@@ -169,9 +169,9 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
     DessinerCadre();
 
      // dessine trois carrés colorés en diagonale pour tester l'affichage
-   DessinerRectangle(12, 12, 22, 22, ConvertirCouleur(TetrinoCouleur.Rouge));
-   DessinerRectangle(34, 34, 22, 22, ConvertirCouleur(TetrinoCouleur.Jaune));
-   DessinerRectangle(56, 56, 22, 22, ConvertirCouleur(TetrinoCouleur.Bleu));
+   DessinerCarre(12, 12, 22, 22, ConvertirCouleur(TetrinoCouleur.Rouge));
+   DessinerCarre(34, 34, 22, 22, ConvertirCouleur(TetrinoCouleur.Jaune));
+   DessinerCarre(56, 56, 22, 22, ConvertirCouleur(TetrinoCouleur.Bleu));
 }
 
     /* ... */
