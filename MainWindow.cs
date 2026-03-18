@@ -90,6 +90,8 @@ public partial class MainWindow : Window
             Width = with,
             Height = height,
             Fill = couleur,
+            Stroke = Avalonia.Media.Brushes.Black,    //contour
+            StrokeThickness = 1,                      //epaisseur
             Margin = new Thickness(x, y, 0, 0) 
         });
     }
@@ -114,20 +116,6 @@ public partial class MainWindow : Window
         JeuTetris.HauteurGrille * TailleCarre,
         ConvertirCouleur(TetrinoCouleur.Blanc)
     );
-    }
-
-    public void DessinerContour(int x, int y, TetrinoCouleur Noir)
-    {
-    //conversion coordonnées jeu en pixels
-    int pixelX = x * 22 +12;
-    int pixelY = x * 22 + 12;
-    
-    //Dessiner le carré coloré
-    DessinerCarre(pixelX, pixelY, 22, 22, (ConvertirCouleur(TetrinoCouleur.Noir)));
-    
-     //Dessiner le contour noir par-dessus 
-    DessinerCarre(pixelX, pixelY, 22, 22,ConvertirCouleur(TetrinoCouleur.Noir)) //juste le contour
-    ;
     }
 
     //* Ajout Iteration 1*/
