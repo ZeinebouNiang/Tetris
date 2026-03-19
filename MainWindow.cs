@@ -91,7 +91,7 @@ public partial class MainWindow : Window
             Height = height,
             Fill = couleur,
             Stroke = Avalonia.Media.Brushes.Black,    //contour
-            StrokeThickness = 1,                      //epaisseur
+            StrokeThickness = 1.5,                      //epaisseur
             Margin = new Thickness(x, y, 0, 0) 
         });
     }
