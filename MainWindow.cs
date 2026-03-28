@@ -151,12 +151,13 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
     /* Modifiction Iteration 1 */
    public void DemarrerInterface()
 {
-    Console.WriteLine("Démarrage du jeu");
+      //Initialise le jeu
+    jeu.Demarrer();
 
       // efface tous ce qui a déjà été dessiné
     TetrisCanvas.Children.Clear();
 
-      // dessine le cadre 
+      // redessine le cadre 
     DessinerCadre();
 
      // dessine trois carrés colorés en diagonale pour tester l'affichage
@@ -168,25 +169,33 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
     /* ... */
     public void DroiteInterface()
     {
-        jeu.AllerDroite();
+        jeu.Droite();
+        TetrisCanvas.Children.Clear();
+        DessinerCadre();
     }
 
     /* ... */
     public void GaucheInterface()
     {
-        jeu.AllerGauche();
+        jeu.Gauche();
+        TetrisCanvas.Children.Clear();
+        DessinerCadre();
     }
 
     /* ... */
     public void BasInterface()
     {
-        jeu.Descendre();
+        jeu.Bas();
+        TetrisCanvas.Children.Clear();
+        DessinerCadre();
     }
 
     /* ... */
     public void TombeInterface()
     {
-        Console.WriteLine("Déplacement rapide en bas à coder...");
+        jeu.Tombe();
+        TetrisCanvas.Children.Clear();
+        DessinerCadre();
 
     }
 
