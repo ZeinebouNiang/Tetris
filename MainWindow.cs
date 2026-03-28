@@ -19,6 +19,7 @@ namespace InterfaceTetris;
 /* Gère la fenêtre principale du jeu de Tetris, et l'ensemble des interactions du jeu. */
 public partial class MainWindow : Window
 {
+    public JeuTetris jeu;
     /* Minuteur qui déclanche régulièrement un évènement. */
     public DispatcherTimer Minuteur;
 
@@ -79,6 +80,8 @@ public partial class MainWindow : Window
                 TombeInterface();
             }
         };
+
+        jeu = new JeuTetris();
     } 
 
     /* Dessine un rectangle dans le TetrisCanvas, à la position (x, y), de largeur width, 
@@ -165,19 +168,19 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
     /* ... */
     public void DroiteInterface()
     {
-        Console.WriteLine("Déplacement à droite à coder...");
+        jeu.AllerDroite();
     }
 
     /* ... */
     public void GaucheInterface()
     {
-        Console.WriteLine("Déplacement à gauche à coder...");
+        jeu.AllerGauche();
     }
 
     /* ... */
     public void BasInterface()
     {
-        Console.WriteLine("Déplacement en bas à coder...");
+        jeu.Descendre();
     }
 
     /* ... */
