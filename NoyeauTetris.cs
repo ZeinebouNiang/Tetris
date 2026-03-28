@@ -36,7 +36,7 @@ namespace NoyauTetris
             CouleurCourante = TetrinoCouleur.Rouge;
         }
 
-        public void Descendre()
+        public void Bas()
         {
             if(PosY < HauteurGrille - 1)
             {
@@ -54,7 +54,7 @@ namespace NoyauTetris
             }
         }
 
-        public void AllerGauche()
+        public void Gauche()
         {
             if(PosX > 0)
             {
@@ -62,7 +62,7 @@ namespace NoyauTetris
             }
         }
 
-        public void AllerDroite()
+        public void Droite()
         {
             if(PosX < LargeurGrille - 1)
             {
@@ -88,11 +88,36 @@ namespace NoyauTetris
             Grille[PosX, PosY] = CouleurCourante;
         }
 
+         public void Demarrer()
+        {
+            //vider Grille
+            for(int x = 0; x < LargeurGrille; x++)
+            {
+                for (int x = 0; x < HauteurGrille; y++)
+                {
+                    Grille[x, y] = TetrinoCouleur.Couleur;
+                }
+            }
+
+             NouveauBloc();
+        }
+
         public void NouveauBloc()
         {
             PosX = LargeurGrille / 2;
             PosY = 0;
             CouleurCourante = TetrinoCouleur.Rouge;
+        }
+
+        public void Tombe()
+        {
+            while (PeutDescendre())
+            {
+                PosY++;
+            }
+
+            PoserBloc();
+            NouveauBloc();
         }
     }
         //Defition de la position d'un carré.
