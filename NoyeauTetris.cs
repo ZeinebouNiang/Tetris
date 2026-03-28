@@ -16,6 +16,84 @@ namespace NoyauTetris
     {
         public static int LargeurGrille = 12;
         public static int HauteurGrille = 15;
+        public TetrinoCouleur[,] Grille;
+        public int PosX;    //position horizontale dans la grille
+        public int PosY;    //position verticale
+        public TetrinoCouleur CouleurCourante;  //couleur du bloc
+
+        public JeuTetris()
+        {
+            Grille = new TetrinoCouleur[LargeurGrille, HauteurGrille];
+            for(int x = 0; x < LargeurGrille; x++)
+            {
+                for(int y = 0; y < HauteurGrille; y++)
+                {
+                    Grille[x, y]= TetrinoCouleur.Blanc;
+                }
+            }
+            PosX = LargeurGrille / 2;
+            PosY = 0;
+            CouleurCourante = TetrinoCouleur.Rouge;
+        }
+
+        public void Descendre()
+        {
+            if(PosY < HauteurGrille - 1)
+            {
+                PosY++;
+            }
+
+            if(PeutDescendre())
+            {
+                PosY++;
+            }
+            else 
+            {
+                PoserBloc();
+                NouveauBloc();
+            }
+        }
+
+        public void AllerGauche()
+        {
+            if(PosX > 0)
+            {
+                PosX--;
+            }
+        }
+
+        public void AllerDroite()
+        {
+            if(PosX < LargeurGrille - 1)
+            {
+                PosX++;
+            }
+        }
+
+        public bool PeutDescendre()
+        {
+            //collision avec le bas
+            if(PosY >= HauteurGrille - 1)
+                return false;
+
+            //collision avec un bloc déjà posé
+            if(Grille[PosX, PosY + 1] != TetrinoCouleur.Blanc)
+                return false;
+
+            else return true;
+        }
+
+        public void PoserBloc()
+        {
+            Grille[PosX, PosY] = CouleurCourante;
+        }
+
+        public void NouveauBloc()
+        {
+            PosX = LargeurGrille / 2;
+            PosY = 0;
+            CouleurCourante = TetrinoCouleur.Rouge;
+        }
     }
         //Defition de la position d'un carré.
     public class Position
