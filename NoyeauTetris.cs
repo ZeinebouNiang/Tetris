@@ -151,7 +151,9 @@ namespace NoyauTetris
     //Definition d'un tableau de quadruplets de positions.
     public class Tetrino
     {
-          public static Position[][] TetrinosTab = new Position[][]
+        public int Indice;
+        public Position PositionOrigine;
+        public static Position[][] TetrinosTab = new Position[][]
         {
             // carre
             new Position[] { new Position(0, 0), new Position(1, 0),
@@ -164,8 +166,18 @@ namespace NoyauTetris
             new Position(0, -2), new Position(0, -3) }
         };
 
-        public Position[][] Indice = TetrinosTab;
+        public Tetrino()
+        {
+            //à compléter
+        }
+      
+        public Position[] Position()
+        {
+            return TetrinosTab[Indice];
+        }
         
+
+
     }
 
 
