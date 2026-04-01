@@ -93,7 +93,7 @@ namespace NoyauTetris
             //vider Grille
             for(int x = 0; x < LargeurGrille; x++)
             {
-                for (int x = 0; x < HauteurGrille; y++)
+                for (int y = 0; y < HauteurGrille; y++)
                 {
                     Grille[x, y] = TetrinoCouleur.Couleur;
                 }
