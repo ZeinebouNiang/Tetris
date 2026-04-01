@@ -95,7 +95,7 @@ namespace NoyauTetris
             {
                 for (int y = 0; y < HauteurGrille; y++)
                 {
-                    Grille[x, y] = TetrinoCouleur.Couleur;
+                    Grille[x, y] = TetrinoCouleur.Blanc;
                 }
             }
 
