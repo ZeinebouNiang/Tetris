@@ -1,4 +1,5 @@
 
+
 namespace NoyauTetris
 {
     /* Représente les couleurs utilisées dans le jeu. */
@@ -153,6 +154,8 @@ namespace NoyauTetris
     {
         public int Indice;
         public Position PositionOrigine;
+        public TetrinoCouleur Couleur;
+      
         public static Position[][] TetrinosTab = new Position[][]
         {
             // carre
@@ -165,6 +168,12 @@ namespace NoyauTetris
             new Position[] { new Position(0, 0), new Position(0, -1),
             new Position(0, -2), new Position(0, -3) }
         };
+          public static TetrinoCouleur[][] CouleursTetrinos = new TetrinoCouleur[][]
+        {
+            new TetrinoCouleur[] {TetrinoCouleur.Rouge},
+            new TetrinoCouleur[]{TetrinoCouleur.Jaune},
+            new TetrinoCouleur[]{TetrinoCouleur.Bleu},
+        };
 
         public Tetrino()
         {
@@ -175,9 +184,6 @@ namespace NoyauTetris
         {
             return TetrinosTab[Indice];
         }
-        
-
-
     }
 
 
