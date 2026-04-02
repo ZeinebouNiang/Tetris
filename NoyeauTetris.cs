@@ -1,5 +1,3 @@
-
-
 namespace NoyauTetris
 {
     /* Représente les couleurs utilisées dans le jeu. */
@@ -177,10 +175,12 @@ namespace NoyauTetris
 
         public Position[] Position()
         {
-            return TetrinosTab[Indice];
+           return TetrinosTab[Indice];
         }
         public NouveauTetrino()
         {
+              Random random = new Random();
+            int Indice = random.Next(3);
             
         }  
     }
