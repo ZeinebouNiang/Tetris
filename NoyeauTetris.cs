@@ -175,17 +175,13 @@ namespace NoyauTetris
             new TetrinoCouleur[]{TetrinoCouleur.Bleu},
         };
 
-        public Tetrino()
-        {
-            //à compléter
-        }
-      
         public Position[] Position()
         {
             return TetrinosTab[Indice];
         }
+        public NouveauTetrino()
+        {
+            
+        }  
     }
-
-
-
 }
