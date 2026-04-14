@@ -19,7 +19,7 @@ namespace NoyauTetris
         public int PosX;    //position horizontale dans la grille
         public int PosY;    //position verticale
         public TetrinoCouleur CouleurCourante;  //couleur du bloc
-
+        public Tetrino TetrinoCourant; //Tetrino en cours de chute.
         public JeuTetris()
         {
             Grille = new TetrinoCouleur[LargeurGrille, HauteurGrille];
@@ -30,43 +30,35 @@ namespace NoyauTetris
                     Grille[x, y]= TetrinoCouleur.Blanc;
                 }
             }
-            PosX = LargeurGrille / 2;
-            PosY = 0;
-            CouleurCourante = TetrinoCouleur.Rouge;
+            //Creation du Tetrino en cours de chute.
+            TetrinoCourant = new Tetrino();
+
+            //Generation d'un nouveau Tetrino aléatoire.
+            TetrinoCourant.NouveauTetrino();
+
         }
 
         public void Bas()
         {
-            if(PosY < HauteurGrille - 1)
-            {
-                PosY++;
-            }
-
             if(PeutDescendre())
             {
-                PosY++;
+                TetrinoCourant.PositionOrigine.Y++;
             }
             else 
             {
                 PoserBloc();
-                NouveauBloc();
+                TetrinoCourant.NouveauTetrino();
             }
         }
 
         public void Gauche()
         {
-            if(PosX > 0)
-            {
-                PosX--;
-            }
+            TetrinoCourant.PositionOrigine.X--;
         }
 
         public void Droite()
         {
-            if(PosX < LargeurGrille - 1)
-            {
-                PosX++;
-            }
+            TetrinoCourant.PositionOrigine.X++;
         }
 
         public bool PeutDescendre()
@@ -84,7 +76,10 @@ namespace NoyauTetris
 
         public void PoserBloc()
         {
-            Grille[PosX, PosY] = CouleurCourante;
+            if (PosX >= 0 && PosX < LargeurGrille && PosY >= 0 && PosY < HauteurGrille)
+            {
+                Grille[PosX, PosY] = TetrinoCourant.Couleur;
+            }
         }
 
          public void Demarrer()
@@ -98,25 +93,19 @@ namespace NoyauTetris
                 }
             }
 
-             NouveauBloc();
-        }
-
-        public void NouveauBloc()
-        {
-            PosX = LargeurGrille / 2;
-            PosY = 0;
-            CouleurCourante = TetrinoCouleur.Rouge;
+            //Generation d'un nouveau Tetrino aléatoire.
+            TetrinoCourant.NouveauTetrino();
         }
 
         public void Tombe()
         {
             while (PeutDescendre())
             {
-                PosY++;
+                TetrinoCourant.PositionOrigine.Y++;
             }
 
             PoserBloc();
-            NouveauBloc();
+            TetrinoCourant.NouveauTetrino();
         }
     }
         //Defition de la position d'un carré.
@@ -147,13 +136,16 @@ namespace NoyauTetris
         }
     }
 
-    //Definition d'un tableau de quadruplets de positions.
+    //Creation d'un Tetrino compose de 4 carres.
     public class Tetrino
     {
         public int Indice;
+
+        // Position de l'origine du Tetrino dans le repere du jeu.
         public Position PositionOrigine;
         public TetrinoCouleur Couleur;
       
+      //Tableau de quadruplets de positions possibles.
         public static Position[][] TetrinosTab = new Position[][]
         {
             // carre
@@ -166,22 +158,49 @@ namespace NoyauTetris
             new Position[] { new Position(0, 0), new Position(0, -1),
             new Position(0, -2), new Position(0, -3) }
         };
-          public static TetrinoCouleur[][] CouleursTetrinos = new TetrinoCouleur[][]
+        
+        //Tableau des couleurs possibles d'un Tetrino.
+          public static TetrinoCouleur[] CouleursTetrinos =
         {
-            new TetrinoCouleur[] {TetrinoCouleur.Rouge},
-            new TetrinoCouleur[]{TetrinoCouleur.Jaune},
-            new TetrinoCouleur[]{TetrinoCouleur.Bleu},
+            TetrinoCouleur.Rouge,
+            TetrinoCouleur.Jaune,
+            TetrinoCouleur.Bleu,
         };
 
+        //Constructeur par défaut.
+        public Tetrino()
+        {
+            Indice = 0;
+            PositionOrigine = new Position(0, 0);
+            Couleur = TetrinoCouleur.Rouge;
+
+        }
+
+        //Methode qui retourne le quadruplet de positions du Tetrino.
         public Position[] Position()
         {
-           return TetrinosTab[Indice];
+           Position[] positionsJeu = new Position[4];
+              for(int i = 0; i < 4; i++)
+              {
+                 positionsJeu[i] = new Position(
+                      PositionOrigine.X + TetrinosTab[Indice][i].X,
+                      PositionOrigine.Y + TetrinosTab[Indice][i].Y
+                 );
+              }
+            return positionsJeu;
         }
-        public NouveauTetrino()
+
+        //Methode qui genere un nouveau tetrino aléatoire.
+        public void NouveauTetrino()
         {
-              Random random = new Random();
-            int Indice = random.Next(3);
-            
-        }  
+            //Choix de la forme du Tetrino.
+            Indice = new Random().Next(0, TetrinosTab.Length);
+
+            //Choix de la couleur du Tetrino.
+            Couleur = CouleursTetrinos[new Random().Next(0, CouleursTetrinos.Length)];
+
+            //Position d'apparition du Tetrino.
+            PositionOrigine = new Position(JeuTetris.LargeurGrille / 2, 0);
+        }
     }
 }
