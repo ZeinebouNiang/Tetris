@@ -147,56 +147,91 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
         return Avalonia.Media.Brushes.Blue;
     }
 }
+    //Ajout Iteration 2.
+
+    //Met à jour l'affichage du jeu en fonction de l'état du jeu (position des blocs, etc.)
+    public void DessinerJeu()
+    {
+        //Netroyer le canvas.
+        TetrisCanvas.Children.Clear();
+
+        //Dessiner le cadre du jeu.
+        DessinerCadre();
+
+        //Dessiner les blocs déjà posés.
+        for(int x = 0; x < JeuTetris.LargeurGrille; x++)
+        {
+            for(int y = 0; y < JeuTetris.HauteurGrille; y++)
+            {
+                if(jeu.Grille[x, y] != TetrinoCouleur.Blanc)
+                {
+                    DessinerCarre(
+                        EpaisseurCadre + x * TailleCarre,
+                        EpaisseurCadre + y * TailleCarre,
+                        TailleCarre,
+                        TailleCarre,
+                        ConvertirCouleur(jeu.Grille[x, y])
+                    );
+                }
+             }
+        }
+
+        //Dessiner le tetrino en cours de chute.
+        Position[] position = jeu.TetrinoCourant.Position();
+
+        for(int i = 0; i < 4; i++)
+        {
+            if (position[i].Y >= 0) //Ne pas dessiner les parties du tetrino qui sont au dessus du cadre
+            {
+                DessinerCarre(
+                    EpaisseurCadre + position[i].X * TailleCarre,
+                    EpaisseurCadre + position[i].Y * TailleCarre,
+                    TailleCarre,
+                    TailleCarre,
+                ConvertirCouleur(jeu.TetrinoCourant.Couleur)
+                );
+             }
+        }
+    }
 
     /* Modifiction Iteration 1 */
    public void DemarrerInterface()
 {
-      //Initialise le jeu
+    //Initialise le jeu
     jeu.Demarrer();
+    
+    DessinerJeu();
 
-      // efface tous ce qui a déjà été dessiné
-    TetrisCanvas.Children.Clear();
-
-      // redessine le cadre 
-    DessinerCadre();
-
-     // dessine trois carrés colorés en diagonale pour tester l'affichage
-   DessinerCarre(12, 12, 22, 22, ConvertirCouleur(TetrinoCouleur.Rouge));
-   DessinerCarre(34, 34, 22, 22, ConvertirCouleur(TetrinoCouleur.Jaune));
-   DessinerCarre(56, 56, 22, 22, ConvertirCouleur(TetrinoCouleur.Bleu));
+    //Démarre le minuteur.
+    Minuteur.Start();
 }
 
     /* ... */
     public void DroiteInterface()
     {
         jeu.Droite();
-        TetrisCanvas.Children.Clear();
-        DessinerCadre();
+        DessinerJeu();
     }
 
     /* ... */
     public void GaucheInterface()
     {
         jeu.Gauche();
-        TetrisCanvas.Children.Clear();
-        DessinerCadre();
+        DessinerJeu();
     }
 
     /* ... */
     public void BasInterface()
     {
         jeu.Bas();
-        TetrisCanvas.Children.Clear();
-        DessinerCadre();
+        DessinerJeu();
     }
 
     /* ... */
     public void TombeInterface()
     {
         jeu.Tombe();
-        TetrisCanvas.Children.Clear();
-        DessinerCadre();
-
+        DessinerJeu();
     }
 
     /* ... */
