@@ -158,30 +158,13 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
         //Dessiner le cadre du jeu.
         DessinerCadre();
 
-        //Dessiner les blocs déjà posés.
-        for(int x = 0; x < JeuTetris.LargeurGrille; x++)
-        {
-            for(int y = 0; y < JeuTetris.HauteurGrille; y++)
-            {
-                if(jeu.Grille[x, y] != TetrinoCouleur.Blanc)
-                {
-                    DessinerCarre(
-                        EpaisseurCadre + x * TailleCarre,
-                        EpaisseurCadre + y * TailleCarre,
-                        TailleCarre,
-                        TailleCarre,
-                        ConvertirCouleur(jeu.Grille[x, y])
-                    );
-                }
-             }
-        }
-
         //Dessiner le tetrino en cours de chute.
         Position[] position = jeu.TetrinoCourant.Position();
 
         for(int i = 0; i < 4; i++)
         {
-            if (position[i].Y >= 0) //Ne pas dessiner les parties du tetrino qui sont au dessus du cadre
+            //Ne pas dessiner les parties du tetrino qui sont au dessus du cadre.
+            if (position[i].Y >= 0) 
             {
                 DessinerCarre(
                     EpaisseurCadre + position[i].X * TailleCarre,
