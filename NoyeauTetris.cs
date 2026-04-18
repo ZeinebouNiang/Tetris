@@ -63,20 +63,24 @@ namespace NoyauTetris
 
         public bool PeutDescendre()
         {
-            //collision avec le bas
-            if(PosY >= HauteurGrille - 1)
-                return false;
+            Position[] position = TetrinoCourant.Position();
 
-            //collision avec un bloc déjà posé
-            if(Grille[PosX, PosY + 1] != TetrinoCouleur.Blanc)
-                return false;
-
-            else return true;
+            for(int i = 0; i < 4; i++)
+            {
+               //Empeche collision avec le bas de la grille.
+                if (position[i].Y + 1 >= HauteurGrille || 
+                    (position[i].Y >= 0 && Grille[position[i].X, position[i].Y] != TetrinoCouleur.Blanc))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public void PoserBloc()
         {
-            if (PosX >= 0 && PosX < LargeurGrille && PosY >= 0 && PosY < HauteurGrille)
+            if (PosX >= 0 && PosX < LargeurGrille &&
+                PosY >= 0 && PosY < HauteurGrille)
             {
                 Grille[PosX, PosY] = TetrinoCourant.Couleur;
             }
@@ -108,7 +112,7 @@ namespace NoyauTetris
             TetrinoCourant.NouveauTetrino();
         }
     }
-        //Defition de la position d'un carré.
+    //Defition de la position d'un carré.
     public class Position
     {
         public int X;
