@@ -128,7 +128,52 @@ namespace NoyauTetris
                     Grille[x, y] = TetrinoCourant.Couleur;
                 }
             }
+            SupprimerLignesPleines();
         }
+
+        //Detecter une ligne pleine
+        public bool LignePleine(int y)
+        {
+            for(int x = 0; x < LargeurGrille; x++)
+            {
+                if (Grille[x, y] == TetrinoCouleur.Blanc)
+                {
+                    return false;
+                }
+                else {return true;
+                     }
+            }
+        }
+
+        public void SupprimerLigne(int y)
+        {
+            //Faire descendre toutes les lignes au-dessus
+            for(int j = y; y > 0; j--)
+            {
+                for(int x = 0; x < LargeurGrille; x++)
+                {
+                    Grille[x, j] = Grille[x, j - 1];
+                }
+            }
+            //Vider la ligne du haut
+            for(int x = 0; x < LargeurGrille; x++)
+            {
+                Grille[x, 0] = TetrinoCouleur.Blanc;
+            }
+        }
+
+        //Verifier toutes les lignes
+        public void SupprimerLignesPleines()
+        {
+            for(int y = 0; y < HauteurGrille; y++)
+            {
+                if(LignePleine(y))
+                {
+                    SupprimerLigne(y);
+                }
+            }
+        }
+        
     }
     //Defition de la position d'un carré.
     public class Position
