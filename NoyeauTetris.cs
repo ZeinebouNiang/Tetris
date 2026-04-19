@@ -13,8 +13,8 @@ namespace NoyauTetris
     /* Définit les dimensions de la grille du jeu. */
     public class JeuTetris
     {
-        public static int LargeurGrille = 12;
-        public static int HauteurGrille = 15;
+        public static int LargeurGrille = 10;
+        public static int HauteurGrille = 20;
         public TetrinoCouleur[,] Grille;
         public int PosX;    //position horizontale dans la grille
         public int PosY;    //position verticale
@@ -88,7 +88,7 @@ namespace NoyauTetris
 
          public void Demarrer()
         {
-            //vider Grille
+            //reinitialiser Grille
             for(int x = 0; x < LargeurGrille; x++)
             {
                 for (int y = 0; y < HauteurGrille; y++)
@@ -98,7 +98,9 @@ namespace NoyauTetris
             }
 
             //Generation d'un nouveau Tetrino aléatoire.
-            TetrinoCourant.NouveauTetrino();
+            PosX = LargeurGrille / 2;
+            PosY = 0;
+            CouleurCourante = TetrinoCouleur.Rouge;
         }
 
         public void Tombe()
