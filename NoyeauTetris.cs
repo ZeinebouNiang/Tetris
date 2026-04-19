@@ -46,7 +46,7 @@ namespace NoyauTetris
             }
             else 
             {
-                PoserBloc();
+                FigerTetrino();
                 TetrinoCourant.NouveauTetrino();
             }
         }
@@ -110,8 +110,24 @@ namespace NoyauTetris
                 TetrinoCourant.PositionOrigine.Y++;
             }
 
-            PoserBloc();
+            FigerTetrino();
             TetrinoCourant.NouveauTetrino();
+        }
+        public void FigerTetrino()
+        {
+            Position[] positions = TetrinoCourant.Position();
+
+            for (int i = 0; i < 4; i++)
+            {
+                int X = position[i].X;
+                int Y = position[i].Y;
+
+                //eviter les erreurs hors grille
+                if (x >=0 && x < LargeurGrille && y >= 0 && y < HauteurGrille)
+                {
+                    Grille[x, y] = TetrinoCourant.Couleur;
+                }
+            }
         }
     }
     //Defition de la position d'un carré.
