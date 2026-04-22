@@ -26,25 +26,27 @@ public partial class MainWindow : Window
     //*Ajout Iteration 1*/ 
 
 //* Constantes utilisées par DessinerCadre
-    public const int TailleCarre = 22;
-    public const int EpaisseurCadre = 12;
+    public const int TailleCarre = 20;
+    public const int EpaisseurCadre = 10;
+    public const int TailleBouton = 36;
+    public const int Marge = 50;
     
     public MainWindow()
     {
         InitializeComponent();
         // Défini la taille de la fenêtre à partir des constantes
-        Width = 368;
-        Height = 514;
+        Width = 2 * Marge + JeuTetris.LargeurGrille * TailleCarre + 2 * EpaisseurCadre;
+        Height = 4 * Marge + JeuTetris.HauteurGrille * TailleCarre + 2 * EpaisseurCadre + 2 * TailleBouton;
         // Définit le texte de InfoText
         InfoText.Text = "Zone de texte";
         // Défini la taille du canvas à partir des constantes
-        TetrisCanvas.Width = 288;
-        TetrisCanvas.Height = 354;
+        TetrisCanvas.Width = JeuTetris.LargeurGrille * TailleCarre + 2 * EpaisseurCadre;
+        TetrisCanvas.Height = JeuTetris.HauteurGrille * TailleCarre + 2 * EpaisseurCadre;
         // Défini la taille des boutons à partir des constantes
-        StartButton.Width = 288;
-        StartButton.Height = 40;
-        QuitButton.Width = 288;
-        QuitButton.Height = 40; 
+        StartButton.Width = JeuTetris.LargeurGrille * TailleCarre + 2 * EpaisseurCadre;
+        StartButton.Height = TailleBouton;
+        QuitButton.Width = JeuTetris.LargeurGrille * TailleCarre + 2 * EpaisseurCadre;
+        QuitButton.Height = TailleBouton;
         // Initialise le minuteur pour faire descendre le tetrino courant toutes les 500 milisecondes
         Minuteur = new DispatcherTimer();
         Minuteur.Interval = TimeSpan.FromMilliseconds(500);
