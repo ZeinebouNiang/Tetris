@@ -52,80 +52,123 @@ namespace NoyauTetris
             }
         }
 
-        public void Gauche()
-        {
-            if(PeutDescendre())
-            {
-            TetrinoCourant.PositionOrigine.X--;
-            }
-            else 
-            {
-                FigerTetrino();
-                TetrinoCourant.NouveauTetrino();
-            }
-        }
+       public void Gauche()
+{
+    if (PeutAllerGauche())
+    {
+        TetrinoCourant.PositionOrigine.X--;
+    }
+}
 
-        public void Droite()
-        {
-            if(PeutDescendre())
-            {
-                 TetrinoCourant.PositionOrigine.X++;
-            }
-            else 
-            {
-                FigerTetrino();
-                TetrinoCourant.NouveauTetrino();
-            }
-        }
+public void Droite()
+{
+    if (PeutAllerDroite())
+    {
+        TetrinoCourant.PositionOrigine.X++;
+    }
+}
+
 
         public bool PeutDescendre()
         {
-            Position[] position = TetrinoCourant.Position();
+    Position[] positions = TetrinoCourant.Position();
 
-            for(int i = 0; i < 4; i++)
-            {  
-                //Empeche les tetrinos de sortir de la grille.
-                if (position[i].X + 1 >= LargeurGrille || 
-                    (position[i].X + 1 >= 0 && Grille[position[i].X + 1, position[i].Y] != TetrinoCouleur.Blanc))
-                {
-                    return false;
-                }
-               //Empeche collision avec le bas de la grille.
-                if (position[i].Y + 1 >= HauteurGrille || 
-                    (position[i].Y + 1 >= 0 && Grille[position[i].X, position[i].Y + 1] != TetrinoCouleur.Blanc))
-                {
-                    return false;
-                }
-                
-            }
-            return true;
-        }
+    for (int i = 0; i < 4; i++)
+    {
+        int x = positions[i].X;
+        int y = positions[i].Y;
 
-        public void PoserBloc()
+        // collision avec le bas
+        if (y + 1 >= HauteurGrille)
         {
-            if (PosX >= 0 && PosX < LargeurGrille &&
-                PosY >= 0 && PosY < HauteurGrille)
-            {
-                Grille[PosX, PosY] = TetrinoCourant.Couleur;
-            }
+            return false;
         }
 
-         public void Demarrer()
+        // collision avec un bloc figé
+        // on ne teste la grille que si la case du dessous est visible
+        if (y + 1 >= 0 && Grille[x, y + 1] != TetrinoCouleur.Blanc)
         {
-            //reinitialiser Grille
-            for(int x = 0; x < LargeurGrille; x++)
-            {
-                for (int y = 0; y < HauteurGrille; y++)
-                {
-                    Grille[x, y] = TetrinoCouleur.Blanc;
-                }
-            }
-
-            //Generation d'un nouveau Tetrino aléatoire.
-            PosX = LargeurGrille / 2;
-            PosY = 0;
-            CouleurCourante = TetrinoCouleur.Rouge;
+            return false;
         }
+    }
+
+    return true;
+}
+
+public bool PeutAllerGauche()
+{
+    Position[] positions = TetrinoCourant.Position();
+
+    for (int i = 0; i < 4; i++)
+    {
+        int x = positions[i].X;
+        int y = positions[i].Y;
+
+        if (x - 1 < 0)
+        {
+            return false;
+        }
+
+        if (y >= 0 && Grille[x - 1, y] != TetrinoCouleur.Blanc)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+public bool PeutAllerDroite()
+{
+    Position[] positions = TetrinoCourant.Position();
+
+    for (int i = 0; i < 4; i++)
+    {
+        int x = positions[i].X;
+        int y = positions[i].Y;
+
+        if (x + 1 >= LargeurGrille)
+        {
+            return false;
+        }
+
+        if (y >= 0 && Grille[x + 1, y] != TetrinoCouleur.Blanc)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+ public void PoserBloc()
+{
+    Position[] positions = TetrinoCourant.Position();
+
+    for (int i = 0; i < 4; i++)
+    {
+        int x = positions[i].X;
+        int y = positions[i].Y;
+
+        if (x >= 0 && x < LargeurGrille && y >= 0 && y < HauteurGrille)
+        {
+            Grille[x, y] = TetrinoCourant.Couleur;
+        }
+    }
+}
+
+public void Demarrer()
+{
+    for (int x = 0; x < LargeurGrille; x++)
+    {
+        for (int y = 0; y < HauteurGrille; y++)
+        {
+            Grille[x, y] = TetrinoCouleur.Blanc;
+        }
+    }
+
+    TetrinoCourant.NouveauTetrino();
+}
+
 
         public void Tombe()
         {
@@ -168,22 +211,21 @@ namespace NoyauTetris
             return true;
         }
 
-        public void SupprimerLigne(int y)
+       public void SupprimerLigne(int y)
+{
+    for (int j = y; j > 0; j--)
+    {
+        for (int x = 0; x < LargeurGrille; x++)
         {
-            //Faire descendre toutes les lignes au-dessus
-            for(int j = y; y > 0; j--)
-            {
-                for(int x = 0; x < LargeurGrille; x++)
-                {
-                    Grille[x, j] = Grille[x, j - 1];
-                }
-            }
-            //Vider la ligne du haut
-            for(int x = 0; x < LargeurGrille; x++)
-            {
-                Grille[x, 0] = TetrinoCouleur.Blanc;
-            }
+            Grille[x, j] = Grille[x, j - 1];
         }
+    }
+
+    for (int x = 0; x < LargeurGrille; x++)
+    {
+        Grille[x, 0] = TetrinoCouleur.Blanc;
+    }
+}
 
         //Verifier toutes les lignes
         public void SupprimerLignesPleines()
@@ -212,12 +254,12 @@ namespace NoyauTetris
 
         public Position DeplaceGauche()
         {
-            return new Position(this.X + 1, this.Y);
+            return new Position(this.X - 1, this.Y);
         }
 
         public Position DeplaceDroite()
         {
-             return new Position(this.X - 1, this.Y);
+             return new Position(this.X + 1, this.Y);
         }
 
         public Position DeplaceBas()
