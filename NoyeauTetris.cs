@@ -1,3 +1,4 @@
+
 namespace NoyauTetris
 {
     /* Représente les couleurs utilisées dans le jeu. */
@@ -53,28 +54,12 @@ namespace NoyauTetris
 
         public void Gauche()
         {
-            if(PeutDescendre())
-            {
             TetrinoCourant.PositionOrigine.X--;
-            }
-            else 
-            {
-                FigerTetrino();
-                TetrinoCourant.NouveauTetrino();
-            }
         }
 
         public void Droite()
         {
-            if(PeutDescendre())
-            {
-                 TetrinoCourant.PositionOrigine.X++;
-            }
-            else 
-            {
-                FigerTetrino();
-                TetrinoCourant.NouveauTetrino();
-            }
+            TetrinoCourant.PositionOrigine.X++;
         }
 
         public bool PeutDescendre()
@@ -82,20 +67,13 @@ namespace NoyauTetris
             Position[] position = TetrinoCourant.Position();
 
             for(int i = 0; i < 4; i++)
-            {  
-                //Empeche collision avec le bas de la grille.
-                if (position[i].X + 1 >= LargeurGrille || 
-                    (position[i].X + 1 >= 0 && Grille[position[i].X + 1, position[i].Y] != TetrinoCouleur.Blanc))
-                {
-                    return false;
-                }
+            {
                //Empeche collision avec le bas de la grille.
                 if (position[i].Y + 1 >= HauteurGrille || 
-                    (position[i].Y + 1 >= 0 && Grille[position[i].X, position[i].Y + 1] != TetrinoCouleur.Blanc))
+                    (position[i].Y >= 0 && Grille[position[i].X, position[i].Y] != TetrinoCouleur.Blanc))
                 {
                     return false;
                 }
-                
             }
             return true;
         }
