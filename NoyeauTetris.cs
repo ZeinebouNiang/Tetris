@@ -84,7 +84,7 @@ namespace NoyauTetris
 
             for(int i = 0; i < 4; i++)
             {  
-                //Empeche collision avec le bas de la grille.
+                //Empeche les tetrinos de sortir de la grille.
                 if (position[i].X + 1 >= LargeurGrille || 
                     (position[i].X + 1 >= 0 && Grille[position[i].X + 1, position[i].Y] != TetrinoCouleur.Blanc))
                 {
