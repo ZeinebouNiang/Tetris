@@ -1,273 +1,249 @@
-namespace NoyauTetris
+/* Fichier MainWindow.axaml.cs
+ * Gère l'interface du jeu de Tetris : la fenêtre graphique et 
+ * l'ensemble des interactions du jeu.
+ * Auteur : ...
+ * Version : alpha
+ */
+
+
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
+using System;
+using Avalonia.Threading;
+// à ajouter à partir de l'itération 1
+using NoyauTetris;
+
+namespace InterfaceTetris;
+
+/* Gère la fenêtre principale du jeu de Tetris, et l'ensemble des interactions du jeu. */
+public partial class MainWindow : Window
 {
-    /* Représente les couleurs utilisées dans le jeu. */
-    public enum TetrinoCouleur
+    public JeuTetris jeu;
+    /* Minuteur qui déclanche régulièrement un évènement. */
+    public DispatcherTimer Minuteur;
+
+    //*Ajout Iteration 1*/ 
+
+//* Constantes utilisées par DessinerCadre
+    public const int TailleCarre = 22;
+    public const int EpaisseurCadre = 12;
+    
+    public MainWindow()
     {
-        Blanc,
-        Noir,
-        Rouge,
-        Jaune,
-        Bleu
-    }
-
-    /* Définit les dimensions de la grille du jeu. */
-    public class JeuTetris
-    {
-        public static int LargeurGrille = 10;
-        public static int HauteurGrille = 20;
-        public TetrinoCouleur[,] Grille;
-        public int PosX;    //position horizontale dans la grille
-        public int PosY;    //position verticale
-        public TetrinoCouleur CouleurCourante;  //couleur du bloc
-        public Tetrino TetrinoCourant; //Tetrino en cours de chute.
-        public JeuTetris()
+        InitializeComponent();
+        // Défini la taille de la fenêtre à partir des constantes
+        Width = 368;
+        Height = 514;
+        // Définit le texte de InfoText
+        InfoText.Text = "Zone de texte";
+        // Défini la taille du canvas à partir des constantes
+        TetrisCanvas.Width = 288;
+        TetrisCanvas.Height = 354;
+        // Défini la taille des boutons à partir des constantes
+        StartButton.Width = 288;
+        StartButton.Height = 40;
+        QuitButton.Width = 288;
+        QuitButton.Height = 40; 
+        // Initialise le minuteur pour faire descendre le tetrino courant toutes les 500 milisecondes
+        Minuteur = new DispatcherTimer();
+        Minuteur.Interval = TimeSpan.FromMilliseconds(500);
+        Minuteur.Tick += (s, e) => { BasInterface();};   
+        // détecte le clic sur le bouton Démarrer, déclanche l'évènement Demarrer, puis appelle la méthode DemarrerTetris
+        StartButton.Click += (s, e) => { DemarrerInterface();};
+        // détecte le clic sur le bouton Quitter, déclanche l'évènement Quiter, puis ferme la fenêtre
+        QuitButton.Click += (s, e) => { Close();};
+        // détecte la pression d'une touche du clavier, et déclanche l'évènement correspondant
+        KeyDown += (s, e) =>
         {
-            Grille = new TetrinoCouleur[LargeurGrille, HauteurGrille];
-            for(int x = 0; x < LargeurGrille; x++)
+            // Choix des touches à modifier si besoin (voir la documentation de l'énumération Key)
+            if (e.Key == Key.Left)
             {
-                for(int y = 0; y < HauteurGrille; y++)
-                {
-                    Grille[x, y]= TetrinoCouleur.Blanc;
-                }
+                GaucheInterface();
             }
-            //Creation du Tetrino en cours de chute.
-            TetrinoCourant = new Tetrino();
-
-            //Generation d'un nouveau Tetrino aléatoire.
-            TetrinoCourant.NouveauTetrino();
-
-        }
-
-        public void Bas()
-        {
-            if(PeutDescendre())
+            else if (e.Key == Key.Right)
             {
-                TetrinoCourant.PositionOrigine.Y++;
+                DroiteInterface();
             }
-            else 
+            else if (e.Key == Key.X)
+            // si vous disposer d'un pavé numérique, choisir Key.PageUp
             {
-                FigerTetrino();
-                TetrinoCourant.NouveauTetrino();
+                RotationDroiteInterface();
             }
-        }
-
-        public void Gauche()
-        {
-            TetrinoCourant.PositionOrigine.X--;
-        }
-
-        public void Droite()
-        {
-            TetrinoCourant.PositionOrigine.X++;
-        }
-
-        public bool PeutDescendre()
-        {
-            Position[] position = TetrinoCourant.Position();
-
-            for(int i = 0; i < 4; i++)
+            else if (e.Key == Key.W)
+            // si vous disposer d'un pavé numérique, choisir Key.Home
             {
-               //Empeche collision avec le bas de la grille.
-                if (position[i].Y + 1 >= HauteurGrille || 
-                    (position[i].Y >= 0 && Grille[position[i].X, position[i].Y] != TetrinoCouleur.Blanc))
-                {
-                    return false;
-                }
+                RotationGaucheInterface();
             }
-            return true;
-        }
-
-        public void PoserBloc()
-        {
-            if (PosX >= 0 && PosX < LargeurGrille &&
-                PosY >= 0 && PosY < HauteurGrille)
+            else if (e.Key == Key.Down)
             {
-                Grille[PosX, PosY] = TetrinoCourant.Couleur;
+                TombeInterface();
             }
-        }
-
-         public void Demarrer()
-        {
-            //reinitialiser Grille
-            for(int x = 0; x < LargeurGrille; x++)
-            {
-                for (int y = 0; y < HauteurGrille; y++)
-                {
-                    Grille[x, y] = TetrinoCouleur.Blanc;
-                }
-            }
-
-            //Generation d'un nouveau Tetrino aléatoire.
-            PosX = LargeurGrille / 2;
-            PosY = 0;
-            CouleurCourante = TetrinoCouleur.Rouge;
-        }
-
-        public void Tombe()
-        {
-            while (PeutDescendre())
-            {
-                TetrinoCourant.PositionOrigine.Y++;
-            }
-
-            FigerTetrino();
-            TetrinoCourant.NouveauTetrino();
-        }
-        public void FigerTetrino()
-        {
-            Position[] positions = TetrinoCourant.Position();
-
-            for (int i = 0; i < 4; i++)
-            {
-                int X = position[i].X;
-                int Y = position[i].Y;
-
-                //eviter les erreurs hors grille
-                if (x >=0 && x < LargeurGrille && y >= 0 && y < HauteurGrille)
-                {
-                    Grille[x, y] = TetrinoCourant.Couleur;
-                }
-            }
-            SupprimerLignesPleines();
-        }
-
-        //Detecter une ligne pleine
-        public bool LignePleine(int y)
-        {
-            for(int x = 0; x < LargeurGrille; x++)
-            {
-                if (Grille[x, y] == TetrinoCouleur.Blanc)
-                {
-                    return false;
-                }
-                else {return true;
-                     }
-            }
-        }
-
-        public void SupprimerLigne(int y)
-        {
-            //Faire descendre toutes les lignes au-dessus
-            for(int j = y; y > 0; j--)
-            {
-                for(int x = 0; x < LargeurGrille; x++)
-                {
-                    Grille[x, j] = Grille[x, j - 1];
-                }
-            }
-            //Vider la ligne du haut
-            for(int x = 0; x < LargeurGrille; x++)
-            {
-                Grille[x, 0] = TetrinoCouleur.Blanc;
-            }
-        }
-
-        //Verifier toutes les lignes
-        public void SupprimerLignesPleines()
-        {
-            for(int y = 0; y < HauteurGrille; y++)
-            {
-                if(LignePleine(y))
-                {
-                    SupprimerLigne(y);
-                }
-            }
-        }
-        
-    }
-    //Defition de la position d'un carré.
-    public class Position
-    {
-        public int X;
-        public int Y;
-        
-        public Position(int x, int y)
-        {
-            X=x;
-            Y=y;
-        }
-
-        public Position DeplaceGauche()
-        {
-            return new Position(this.X + 1, this.Y);
-        }
-
-        public Position DeplaceDroite()
-        {
-             return new Position(this.X - 1, this.Y);
-        }
-
-        public Position DeplaceBas()
-        {
-             return new Position(this.X, this.Y + 1);
-        }
-    }
-
-    //Creation d'un Tetrino compose de 4 carres.
-    public class Tetrino
-    {
-        public int Indice;
-
-        // Position de l'origine du Tetrino dans le repere du jeu.
-        public Position PositionOrigine;
-        public TetrinoCouleur Couleur;
-      
-      //Tableau de quadruplets de positions possibles.
-        public static Position[][] TetrinosTab = new Position[][]
-        {
-            // carre
-            new Position[] { new Position(0, 0), new Position(1, 0),
-            new Position(0, -1), new Position(1, -1) },
-            // barre horizontale
-            new Position[] { new Position(0, 0), new Position(1, 0),
-            new Position(2, 0), new Position(3, 0) },
-            // barre verticale
-            new Position[] { new Position(0, 0), new Position(0, -1),
-            new Position(0, -2), new Position(0, -3) }
-        };
-        
-        //Tableau des couleurs possibles d'un Tetrino.
-          public static TetrinoCouleur[] CouleursTetrinos =
-        {
-            TetrinoCouleur.Rouge,
-            TetrinoCouleur.Jaune,
-            TetrinoCouleur.Bleu,
         };
 
-        //Constructeur par défaut.
-        public Tetrino()
-        {
-            Indice = 0;
-            PositionOrigine = new Position(0, 0);
-            Couleur = TetrinoCouleur.Rouge;
+        jeu = new JeuTetris();
+    } 
 
+    /* Dessine un rectangle dans le TetrisCanvas, à la position (x, y), de largeur width, 
+    de hauteur height (en pixels) et de couleur couleur. */
+    public void DessinerCarre(int x, int y, int with, int height, Avalonia.Media.IBrush couleur)
+    {
+        TetrisCanvas.Children.Add(new Avalonia.Controls.Shapes.Rectangle
+        {
+            Width = with,
+            Height = height,
+            Fill = couleur,
+            Stroke = Avalonia.Media.Brushes.Black,    //contour
+            StrokeThickness = 1.5,                      //epaisseur
+            Margin = new Thickness(x, y, 0, 0) 
+        });
+    }
+
+    //*Ajout Iteration 1*/
+   
+  //* Dessine le cadre du terrain de jeu dans la zone graphique*/
+   public void DessinerCadre()
+     {
+          // calcul de la largeur totale (zone de jeu + bordures) et de la hauteur totale*/
+      int largeur = JeuTetris.LargeurGrille * TailleCarre + 2 * EpaisseurCadre;
+      int hauteur = JeuTetris.HauteurGrille * TailleCarre + 2 * EpaisseurCadre;
+
+      // cadre autour rectangle noir 
+      DessinerCarre(0, 0, largeur, hauteur, ConvertirCouleur(TetrinoCouleur.Noir));
+
+      // rectangle blanc intérieur
+      DessinerCarre(
+        EpaisseurCadre,
+        EpaisseurCadre,
+        JeuTetris.LargeurGrille * TailleCarre,
+        JeuTetris.HauteurGrille * TailleCarre,
+        ConvertirCouleur(TetrinoCouleur.Blanc)
+    );
+    }
+
+    //* Ajout Iteration 1*/
+
+    //* change les couleurs du noyau du jeu  */
+public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
+{
+    if (couleur == TetrinoCouleur.Blanc)
+    {
+        return Avalonia.Media.Brushes.White;
+    }
+    else if (couleur == TetrinoCouleur.Noir)
+    {
+        return Avalonia.Media.Brushes.Black;
+    }
+    else if (couleur == TetrinoCouleur.Rouge)
+    {
+        return Avalonia.Media.Brushes.Red;
+    }
+    else if (couleur == TetrinoCouleur.Jaune)
+    {
+        return Avalonia.Media.Brushes.Yellow;
+    }
+    else
+    {
+        return Avalonia.Media.Brushes.Blue;
+    }
+}
+    //Ajout Iteration 2.
+
+    //Met à jour l'affichage du jeu en fonction de l'état du jeu (position des blocs, etc.)
+    public void DessinerJeu()
+    {
+        //Netroyer le canvas.
+        TetrisCanvas.Children.Clear();
+
+        //Dessiner le cadre du jeu.
+        DessinerCadre();
+
+        //Dessiner les blocs figés dans la grille.
+        for(int x = 0; x < JeuTetris.LargeurGrille; x++)
+        {
+            for(int y = 0; y < JeuTetris.HauteurGrille; y++)
+            {
+                if(jeu.Grille[x, y] != TetrinoCouleur.Blanc)
+                {
+                    DessinerCarre(
+                        EpaisseurCadre + x * TailleCarre,
+                        EpaisseurCadre + y * TailleCarre,
+                        TailleCarre,
+                        TailleCarre,
+                    ConvertirCouleur(jeu.Grille[x, y])
+                    );
+                }
+            }
         }
 
-        //Methode qui retourne le quadruplet de positions du Tetrino.
-        public Position[] Position()
+        //Dessiner le tetrino en cours de chute.
+        Position[] position = jeu.TetrinoCourant.Position();
+
+        for(int i = 0; i < 4; i++)
         {
-           Position[] positionsJeu = new Position[4];
-              for(int i = 0; i < 4; i++)
-              {
-                 positionsJeu[i] = new Position(
-                      PositionOrigine.X + TetrinosTab[Indice][i].X,
-                      PositionOrigine.Y + TetrinosTab[Indice][i].Y
-                 );
-              }
-            return positionsJeu;
+            //Ne pas dessiner les parties du tetrino qui sont au dessus du cadre.
+            if (position[i].Y >= 0) 
+            {
+                DessinerCarre(
+                    EpaisseurCadre + position[i].X * TailleCarre,
+                    EpaisseurCadre + position[i].Y * TailleCarre,
+                    TailleCarre,
+                    TailleCarre,
+                ConvertirCouleur(jeu.TetrinoCourant.Couleur)
+                );
+             }
         }
+    }
 
-        //Methode qui genere un nouveau tetrino aléatoire.
-        public void NouveauTetrino()
-        {
-            //Choix de la forme du Tetrino.
-            Indice = new Random().Next(0, TetrinosTab.Length);
+    /* Modifiction Iteration 1 */
+   public void DemarrerInterface()
+{
+    //Initialise le jeu
+    jeu.Demarrer();
+    
+    DessinerJeu();
 
-            //Choix de la couleur du Tetrino.
-            Couleur = CouleursTetrinos[new Random().Next(0, CouleursTetrinos.Length)];
+    //Démarre le minuteur.
+    Minuteur.Start();
+}
 
-            //Position d'apparition du Tetrino.
-            PositionOrigine = new Position(JeuTetris.LargeurGrille / 2, 0);
-        }
+    /* ... */
+    public void DroiteInterface()
+    {
+        jeu.Droite();
+        DessinerJeu();
+    }
+
+    /* ... */
+    public void GaucheInterface()
+    {
+        jeu.Gauche();
+        DessinerJeu();
+    }
+
+    /* ... */
+    public void BasInterface()
+    {
+        jeu.Bas();
+        DessinerJeu();
+    }
+
+    /* ... */
+    public void TombeInterface()
+    {
+        jeu.Tombe();
+        DessinerJeu();
+    }
+
+    /* ... */
+    public void RotationDroiteInterface()
+    {
+        Console.WriteLine("Rotation à droit à coder...");
+    }
+
+    /* ... */
+    public void RotationGaucheInterface()
+    {
+        Console.WriteLine("Rotation à gauche à coder...");
     }
 }
