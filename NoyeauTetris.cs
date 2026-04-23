@@ -39,18 +39,20 @@ namespace NoyauTetris
 
         }
 
+        public bool Perdu;
+
         public void Bas()
-        {
-            if(PeutDescendre())
-            {
-                TetrinoCourant.PositionOrigine.Y++;
-            }
-            else 
-            {
-                FigerTetrino();
-                TetrinoCourant.NouveauTetrino();
-            }
-        }
+{
+    if (PeutDescendre())
+    {
+        TetrinoCourant.PositionOrigine.Y++;
+    }
+    else
+    {
+        FigerTetrino();
+        NouveauBloc(); 
+    }
+}
 
        public void Gauche()
 {
@@ -158,6 +160,7 @@ public bool PeutAllerDroite()
 
 public void Demarrer()
 {
+    // vider la grille
     for (int x = 0; x < LargeurGrille; x++)
     {
         for (int y = 0; y < HauteurGrille; y++)
@@ -166,9 +169,35 @@ public void Demarrer()
         }
     }
 
+    Perdu = false; 
+    NouveauBloc();
+
     TetrinoCourant.NouveauTetrino();
 }
+public void NouveauBloc()
+{
+    // crée un nouveau tetrino
+    TetrinoCourant.NouveauTetrino();
 
+    Position[] positions = TetrinoCourant.Position();
+
+    // vérifie si le nouveau tetrino est déjà en collision
+    for (int i = 0; i < 4; i++)
+    {
+        int x = positions[i].X;
+        int y = positions[i].Y;
+
+        //  IMPORTANT : on ne teste QUE les cases visibles
+        if (y >= 0)
+        {
+            if (Grille[x, y] != TetrinoCouleur.Blanc)
+            {
+                Perdu = true;
+                return;
+            }
+        }
+    }
+}
 
         public void Tombe()
         {
@@ -238,6 +267,53 @@ public void Demarrer()
                 }
             }
         }
+        /* Vérifie si la rotation est possible */
+public bool RotationPossible()
+{
+    Position[] positions = TetrinoCourant.Position();
+
+    for (int i = 0; i < 4; i++)
+    {
+        int x = positions[i].X;
+        int y = positions[i].Y;
+
+        if (x < 0 || x >= LargeurGrille || y >= HauteurGrille)
+            return false;
+
+        if (y >= 0 && Grille[x, y] != TetrinoCouleur.Blanc)
+            return false;
+    }
+
+    return true;
+}
+public void RotationDroite()
+{
+    int ancienIndice = TetrinoCourant.Indice;
+    int ancienX = TetrinoCourant.PositionOrigine.X;
+    int ancienY = TetrinoCourant.PositionOrigine.Y;
+
+    TetrinoCourant.RotationDroite();
+
+    if (!RotationPossible())
+    {
+        TetrinoCourant.Indice = ancienIndice;
+        TetrinoCourant.PositionOrigine = new Position(ancienX, ancienY);
+    }
+}
+public void RotationGauche()
+{
+    int ancienIndice = TetrinoCourant.Indice;
+    int ancienX = TetrinoCourant.PositionOrigine.X;
+    int ancienY = TetrinoCourant.PositionOrigine.Y;
+
+    TetrinoCourant.RotationGauche();
+
+    if (!RotationPossible())
+    {
+        TetrinoCourant.Indice = ancienIndice;
+        TetrinoCourant.PositionOrigine = new Position(ancienX, ancienY);
+    }
+}
         
     }
     //Defition de la position d'un carré.
@@ -298,6 +374,51 @@ public void Demarrer()
             TetrinoCouleur.Jaune,
             TetrinoCouleur.Bleu,
         };
+          /* Rotation vers la droite */
+public void RotationDroite()
+{
+    if (Indice == 0) return; // carré → pas de rotation
+
+    if (Indice == 1) // barre horizontale
+    {
+        Indice = 2;
+        PositionOrigine = new Position(
+            PositionOrigine.X + 1,
+            PositionOrigine.Y - 1
+        );
+    }
+    else if (Indice == 2) // barre verticale
+    {
+        Indice = 1;
+        PositionOrigine = new Position(
+            PositionOrigine.X - 1,
+            PositionOrigine.Y + 1
+        );
+    }
+}
+
+/* Rotation vers la gauche */
+public void RotationGauche()
+{
+    if (Indice == 0) return;
+
+    if (Indice == 1)
+    {
+        Indice = 2;
+        PositionOrigine = new Position(
+            PositionOrigine.X + 1,
+            PositionOrigine.Y - 1
+        );
+    }
+    else if (Indice == 2)
+    {
+        Indice = 1;
+        PositionOrigine = new Position(
+            PositionOrigine.X - 1,
+            PositionOrigine.Y + 1
+        );
+    }
+}
 
         //Constructeur par défaut.
         public Tetrino()
