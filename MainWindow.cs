@@ -198,14 +198,14 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
     }
 
     /* Modifiction Iteration 1 */
-   public void DemarrerInterface()
+public void DemarrerInterface()
 {
-    //Initialise le jeu
     jeu.Demarrer();
-    
+
+    InfoText.Text = "Jeu en cours";
+
     DessinerJeu();
 
-    //Démarre le minuteur.
     Minuteur.Start();
 }
 
@@ -217,35 +217,45 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
     }
 
     /* ... */
-    public void GaucheInterface()
+public void GaucheInterface()
+{
+    if (jeu.Perdu) return;
+
+    jeu.Gauche();
+    DessinerJeu();
+}
+    /* ... */
+public void BasInterface()
+{
+    jeu.Bas();
+    DessinerJeu();
+
+    if (jeu.Perdu)
     {
-        jeu.Gauche();
-        DessinerJeu();
+        Minuteur.Stop();
+        InfoText.Text = "GAME OVER";
     }
+}
 
     /* ... */
-    public void BasInterface()
-    {
-        jeu.Bas();
-        DessinerJeu();
-    }
+public void TombeInterface()
+{
+    if (jeu.Perdu) return; // bloque le jeu apres game over
 
-    /* ... */
-    public void TombeInterface()
-    {
-        jeu.Tombe();
-        DessinerJeu();
-    }
+    jeu.Tombe();
+    DessinerJeu();
+}
 
     /* ... */
     public void RotationDroiteInterface()
-    {
-        Console.WriteLine("Rotation à droit à coder...");
-    }
+{
+    jeu.RotationDroite();
+    DessinerJeu();
+}
 
-    /* ... */
-    public void RotationGaucheInterface()
-    {
-        Console.WriteLine("Rotation à gauche à coder...");
-    }
+public void RotationGaucheInterface()
+{
+    jeu.RotationGauche();
+    DessinerJeu();
+}
 }
