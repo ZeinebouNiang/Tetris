@@ -13,6 +13,7 @@ using System;
 using Avalonia.Threading;
 // à ajouter à partir de l'itération 1
 using NoyauTetris;
+using Microsoft.VisualBasic;
 
 namespace InterfaceTetris;
 
@@ -154,7 +155,7 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
     //Met à jour l'affichage du jeu en fonction de l'état du jeu (position des blocs, etc.)
     public void DessinerJeu()
     {
-        //Netroyer le canvas.
+        //Nettoyer le canvas.
         TetrisCanvas.Children.Clear();
 
         //Dessiner le cadre du jeu.
@@ -195,12 +196,20 @@ public Avalonia.Media.IBrush ConvertirCouleur(TetrinoCouleur couleur)
                 );
              }
         }
+
+        if(!jeu.Perdu)
+        {
+            InfoText.Text = "Score : " +jeu.Score;
+        }
     }
 
     /* Modifiction Iteration 1 */
 public void DemarrerInterface()
 {
     jeu.Demarrer();
+
+    //vitesse initiale
+    Minuteur.Interval = TimeSpan.FromMilliseconds(1024);
 
     InfoText.Text = "Jeu en cours";
 
@@ -230,11 +239,36 @@ public void BasInterface()
     jeu.Bas();
     DessinerJeu();
 
+    //Gestion de la fin de partie
     if (jeu.Perdu)
     {
         Minuteur.Stop();
         InfoText.Text = "GAME OVER";
+        return;
     }
+
+    //mise à jour de la vitesse selon le niveau
+    if(jeu.Niveau > 1)
+        {
+            double nouveauTemps = 1024 / Math.Pow(2, jeu.Niveau - 1);
+            if(nouveauTemps >= 50)
+            {
+                Minuteur.Interval = TimeSpan.FromMilliseconds(nouveauTemps);
+            }
+        }
+
+    //Acceleration toutes les 10pièces
+    if(jeu.CompteurTetrinos % 10 == 0)
+        {
+            //on divise la vitesse par 2 donc plus rapide
+            double nouveauTemps = Minuteur.Interval.TotalMilliseconds / 2;
+
+            //eviter d'aller trop vite
+            if(nouveauTemps >= 50)
+            {
+                Minuteur.Interval = TimeSpan.FromMilliseconds(nouveauTemps);
+            }
+        }
 }
 
     /* ... */
