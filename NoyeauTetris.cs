@@ -40,6 +40,10 @@ namespace NoyauTetris
         }
 
         public bool Perdu;
+        public int CompteurTetrinos;
+        public int Score;
+        public int Niveau; //eviter que la vitesse sois diviser plusieurs fois d'un coup si la condition est verifié
+
 
         public void Bas()
 {
@@ -160,6 +164,8 @@ public bool PeutAllerDroite()
 
 public void Demarrer()
 {
+    Score = 0;
+    Niveau = 1;
     // vider la grille
     for (int x = 0; x < LargeurGrille; x++)
     {
@@ -170,6 +176,8 @@ public void Demarrer()
     }
 
     Perdu = false; 
+    CompteurTetrinos = 0;
+
     NouveauBloc();
 
     TetrinoCourant.NouveauTetrino();
@@ -178,6 +186,13 @@ public void NouveauBloc()
 {
     // crée un nouveau tetrino
     TetrinoCourant.NouveauTetrino();
+
+    CompteurTetrinos++;
+
+    if(CompteurTetrinos % 10 == 0)
+            {
+                Niveau++;
+            }
 
     Position[] positions = TetrinoCourant.Position();
 
@@ -259,13 +274,19 @@ public void NouveauBloc()
         //Verifier toutes les lignes
         public void SupprimerLignesPleines()
         {
+            int lignesSuprimees = 0;
+
             for(int y = 0; y < HauteurGrille; y++)
             {
                 if(LignePleine(y))
                 {
                     SupprimerLigne(y);
+                    lignesSuprimees++;
                 }
             }
+
+            //mise à jour du score
+            Score += lignesSuprimees * 100;
         }
         /* Vérifie si la rotation est possible */
 public bool RotationPossible()
