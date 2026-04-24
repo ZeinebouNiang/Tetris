@@ -26,7 +26,7 @@ public partial class MainWindow : Window
 
     //*Ajout Iteration 1*/ 
 
-//* Constantes utilisées par DessinerCadre
+//* Constantes utilisées
     public const int TailleCarre = 20;
     public const int EpaisseurCadre = 10;
     public const int TailleBouton = 36;
